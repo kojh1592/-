@@ -58,3 +58,5 @@ git push -u origin main
 이 저장소를 GitHub에 올려둔 상태에서, **Claude 앱(아이패드 포함) → Code 탭 → 클라우드 세션**을 사용하면
 컴퓨터 없이도 아이패드만으로 "코드 수정 요청 → GitHub 반영 → Vercel 자동 배포"를 계속 반복할 수 있어요.
 (Claude 앱의 Code 탭이 보이지 않으면 요금제에 Claude Code가 포함되어 있는지 먼저 확인해주세요.)
+
+<!-- Vercel 첫 배포 트리거용 커밋 -->
