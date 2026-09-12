@@ -27,7 +27,7 @@ export default function AuthGate() {
   const [regPassword, setRegPassword] = useState("");
   const [regPassword2, setRegPassword2] = useState("");
   const [regName, setRegName] = useState("");
-  const [regStation, setRegStation] = useState(STATIONS[0]);
+  const [regStation, setRegStation] = useState("");
   const [regRole, setRegRole] = useState(ROLES[0]);
   const [regRank, setRegRank] = useState(RANKS[0]);
 
@@ -50,6 +50,7 @@ export default function AuthGate() {
     if (regPassword.length < 6) { setError("비밀번호는 6자 이상으로 설정해주세요."); return; }
     if (regPassword !== regPassword2) { setError("비밀번호가 서로 일치하지 않습니다."); return; }
     if (!regName.trim()) { setError("이름을 입력해주세요."); return; }
+    if (!regStation) { setError("소속을 선택해주세요."); return; }
     setBusy(true); setError("");
     const { error } = await supabase.auth.signUp({
       email: regEmail,
@@ -86,7 +87,10 @@ export default function AuthGate() {
             <div className="grid-2" style={{ marginBottom: 12 }}>
               <div>
                 <label className="mono" style={{ fontSize: 10, color: "var(--ink-soft)" }}>소속</label>
-                <select style={selStyle} value={regStation} onChange={(e) => setRegStation(e.target.value)}>{opts(STATIONS)}</select>
+                <select style={selStyle} value={regStation} onChange={(e) => setRegStation(e.target.value)}>
+                  <option value="">-- 소속을 선택해주세요 --</option>
+                  {opts(STATIONS)}
+                </select>
               </div>
               <div>
                 <label className="mono" style={{ fontSize: 10, color: "var(--ink-soft)" }}>직책</label>
