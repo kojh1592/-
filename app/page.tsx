@@ -40,6 +40,11 @@ export default function HomePage() {
     if (session && profile !== undefined) setLoading(false);
   }, [session, profile]);
 
+  // 탭(카테고리·매뉴얼·홈) 전환 시 스크롤을 맨 위로 올려서, 이전 위치에 머물러 있어 화면이 안 바뀐 것처럼 보이는 문제를 방지
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [activeTab]);
+
   async function signOut() {
     await supabase.auth.signOut();
     setActiveTab("home");
@@ -133,7 +138,7 @@ export default function HomePage() {
         <main>
           {activeTab === "home" && <HomeFeed onOpen={(cat) => setActiveTab(cat)} />}
           {activeTab === "manual" && <ManualView />}
-          {activeCat && <CategoryView cat={activeCat} profile={profile} isAdmin={profile.is_admin} searchTerm={searchTerm} />}
+          {activeCat && <CategoryView key={activeCat.id} cat={activeCat} profile={profile} isAdmin={profile.is_admin} searchTerm={searchTerm} />}
         </main>
       </div>
 
