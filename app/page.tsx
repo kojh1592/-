@@ -60,12 +60,23 @@ export default function HomePage() {
   }
 
   if (profile.status === "pending") {
+    const smsBody = encodeURIComponent(
+      `[화재조사관 정보공유 플랫폼] 계정 승인 요청드립니다.\n이메일: ${profile.email}\n이름/소속: ${profile.name} ${profile.station}`
+    );
     return (
       <div className="modal-overlay" style={{ zIndex: 200 }}>
         <div className="modal">
           <h3>관리자 승인 대기 중</h3>
           <p>{profile.email} 계정은 아직 승인되지 않았어요. 관리자 승인 후 이용할 수 있습니다.</p>
-          <div className="modal-actions"><button className="btn btn-ghost" onClick={signOut}>로그아웃</button></div>
+          <p style={{ fontSize: 12.5, color: "var(--ink-soft)" }}>
+            빠른 승인을 원하시면 아래 버튼으로 관리자(010-5384-1592)에게 문자를 보내주세요.
+          </p>
+          <div className="modal-actions">
+            <a className="btn btn-primary" href={`sms:01053841592?body=${smsBody}`} style={{ textDecoration: "none" }}>
+              📱 빠른 승인 요청 문자 보내기
+            </a>
+            <button className="btn btn-ghost" onClick={signOut}>로그아웃</button>
+          </div>
         </div>
       </div>
     );
