@@ -206,3 +206,10 @@
   .lightbox-overlay{position:fixed; inset:0; background:rgba(10,12,16,0.88); z-index:80; display:flex; align-items:center; justify-content:center; padding:20px;}
   .lightbox-overlay img{max-width:100%; max-height:100%; border-radius:6px;}
   .lightbox-close{position:absolute; top:16px; right:18px; width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; font-size:16px; cursor:pointer;}
+
+  /* 열품타 스터디 타이머 */
+  .timer-box{background:var(--navy); border-radius:10px; padding:16px 18px; margin-bottom:14px; text-align:center;}
+  .timer-display{color:#fff; font-size:34px; font-weight:700; letter-spacing:1px; margin-bottom:10px;}
+  .timer-actions{display:flex; gap:8px; justify-content:center; flex-wrap:wrap;}
+  .timer-actions .btn-primary{background:var(--alarm); border-color:var(--alarm);}
+  .timer-actions .btn-ghost{background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.3); color:#fff;}

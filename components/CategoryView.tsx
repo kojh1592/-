@@ -181,6 +181,47 @@ export default function CategoryView({ cat, profile, isAdmin, searchTerm }: { ca
   );
 }
 
+function StudyTimer({ onStop }: { onStop: (minutes: number) => void }) {
+  const [running, setRunning] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    if (!running) return;
+    const t = setInterval(() => setSeconds((s) => s + 1), 1000);
+    return () => clearInterval(t);
+  }, [running]);
+
+  function fmt(s: number) {
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  }
+
+  return (
+    <div className="timer-box">
+      <div className="timer-display mono">{fmt(seconds)}</div>
+      <div className="timer-actions">
+        {!running ? (
+          <button type="button" className="btn btn-primary btn-small" onClick={() => setRunning(true)}>▶ 시작</button>
+        ) : (
+          <button type="button" className="btn btn-primary btn-small" onClick={() => setRunning(false)}>⏸ 정지</button>
+        )}
+        <button type="button" className="btn btn-ghost btn-small" onClick={() => { setRunning(false); setSeconds(0); }}>초기화</button>
+        <button
+          type="button"
+          className="btn btn-ghost btn-small"
+          disabled={seconds === 0}
+          onClick={() => { setRunning(false); onStop(Math.max(1, Math.round(seconds / 60))); }}
+        >
+          이 시간 기록하기 →
+        </button>
+      </div>
+      <p style={{ fontSize: 10.5, color: "var(--ink-soft)", margin: "6px 0 0" }}>
+        타이머를 안 쓰고 아래 "공부 시간" 칸에 직접 시간을 적으셔도 돼요.
+      </p>
+    </div>
+  );
+}
+
 function PostForm({ cat, ui, profile, mode, entry, onCancel, onSaved }: {
   cat: any; ui: any; profile: Profile; mode: "new" | "edit"; entry?: Post; onCancel: () => void; onSaved: () => void;
 }) {
@@ -188,8 +229,7 @@ function PostForm({ cat, ui, profile, mode, entry, onCancel, onSaved }: {
   const [title, setTitle] = useState(entry?.title || "");
   const [content, setContent] = useState(entry?.content || "");
   const [link, setLink] = useState(entry?.link || "");
-  const [extra, setExtra] = useState(entry?.extra || (cat.extra?.type === "select" ? cat.extra.options[0] : ""));
-  const [extra2, setExtra2] = useState(entry?.extra2 || (cat.extra2?.type === "select" ? cat.extra2.options[0] : ""));
+  const [extra, setExtra] = useState(entry?.extra || (cat.extra?.type === "select" ? cat.extra.options[0] : ""));  const [extra2, setExtra2] = useState(entry?.extra2 || (cat.extra2?.type === "select" ? cat.extra2.options[0] : ""));
   const [anonymous, setAnonymous] = useState(entry?.anonymous || false);
   const [station, setStation] = useState(entry?.station || profile.station || STATIONS[0]);
   const [role, setRole] = useState(entry?.role || profile.role || ROLES[0]);
@@ -268,6 +308,7 @@ function PostForm({ cat, ui, profile, mode, entry, onCancel, onSaved }: {
   return (
     <div className="form-card">
       {err && <div className="modal-err">{err}</div>}
+      {cat.id === "studytimer" && <StudyTimer onStop={(m) => setExtra(`${m}분`)} />}
       <div className="form-row"><label>제목</label><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder={ui.pTitle} /></div>
       <div className="form-row"><label>내용</label><textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={ui.pBody} /></div>
       <div className="form-row"><label>첨부 파일 링크 (선택)</label><input value={link} onChange={(e) => setLink(e.target.value)} placeholder="구글드라이브·네이버클라우드 등 파일 링크 붙여넣기" /></div>
