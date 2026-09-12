@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { CATEGORIES } from "@/lib/data";
 import type { Profile, Post } from "@/lib/types";
@@ -40,9 +40,11 @@ export default function HomePage() {
     if (session && profile !== undefined) setLoading(false);
   }, [session, profile]);
 
-  // 탭(카테고리·매뉴얼·홈) 전환 시 스크롤을 맨 위로 올려서, 이전 위치에 머물러 있어 화면이 안 바뀐 것처럼 보이는 문제를 방지
+  // 탭(카테고리·매뉴얼·홈) 전환 시 실제 내용이 있는 위치로 스크롤 이동
+  // (페이지 맨 위로 가면 헤더·탭 목록만 다시 보여서, 눌러도 안 바뀐 것처럼 보이는 문제 방지)
+  const mainRef = useRef<HTMLElement>(null);
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
+    mainRef.current?.scrollIntoView({ behavior: "auto", block: "start" });
   }, [activeTab]);
 
   async function signOut() {
@@ -135,7 +137,7 @@ export default function HomePage() {
             <TabBtn key={c.id} id={c.id} title={c.title} desc={c.desc} active={activeTab === c.id} onClick={() => setActiveTab(c.id)} />
           ))}
         </nav>
-        <main>
+        <main ref={mainRef}>
           {activeTab === "home" && <HomeFeed onOpen={(cat) => setActiveTab(cat)} />}
           {activeTab === "manual" && <ManualView />}
           {activeCat && <CategoryView key={activeCat.id} cat={activeCat} profile={profile} isAdmin={profile.is_admin} searchTerm={searchTerm} />}
